@@ -11,33 +11,33 @@ export interface IDrink {
 
 
 
-const FiltroCategoria = () => {
+const FiltroIngrediente = () => {
 
   const [selected, setSelected] = useState<string>();
   const [categories, setCategories] = useState<string[]>([]);
-  const [drink, setDrink] = useState<any>([]);
+  const [ingrediente, setIngrediente] = useState<any>([]);
 
       useEffect(() => {
           axios
-          .get("https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list")
+          .get("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list")
           .then((res) => {
-            setCategories(res.data.drinks.map((drink: any) => drink.strCategory))})
+            setCategories(res.data.drinks.map((drink: any) => drink.strIngredient1))})
             .catch((err) => console.log(err));       
 
       }, []);
 
       useEffect(() => {
         axios
-        .get("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c="+selected)
-        .then((res) => {setDrink(res.data.drinks)})
+        .get("https://www.thecocktaildb.com/api/json/v1/1/filter.php?i="+selected)
+        .then((res) => {setIngrediente(res.data.drinks)})
         .catch((err) => console.log(err));
       }, [selected]);
 
 
 
   function creaSelect() {
-    return categories.map((category) => {
-      return <option key={category} value={category} >{category}</option>;
+    return categories.map((ingredient) => {
+      return <option key={ingredient} value={ingredient} >{ingredient}</option>;
     });
   };
 
@@ -45,14 +45,14 @@ const FiltroCategoria = () => {
   return (
     <>
     <div className='d-flex flex-wrap flex-column align-items-center'>
-      <h1>Filtra Categoria</h1>
+      <h1>Filtra Ingrediente</h1>
       <select value={selected} onChange={(e) => setSelected(e.currentTarget.value)}>{creaSelect()}</select>
     </div>
       <div className="d-flex flex-wrap justify-content-evenly"   >
-      {drink && drink.map((drink: IDrink) => { return <CardDrink key={drink.idDrink} drink={drink}/> })}
+      {ingrediente && ingrediente.map((drink: IDrink) => { return <CardDrink key={drink.idDrink} drink={drink}/> })}
       </div>
     </>
   )
 }
 
-export default FiltroCategoria
+export default FiltroIngrediente

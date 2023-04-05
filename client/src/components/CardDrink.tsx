@@ -2,6 +2,10 @@ import React from 'react'
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { IDrink } from '../pages/FiltroCategoria';
+import Button from 'react-bootstrap/Button';
+import Modale from './Modale';
+import useStore from '../modules/UseStore';
+
 
 interface IProps {
     drink: IDrink;
@@ -10,31 +14,34 @@ interface IProps {
 
 const CardDrink = (props: IProps) => {
 
-    
+    const randomPrice = ((Math.random() * 20) + 3).toFixed(2);
 
-
+    const [modalShow, setModalShow] = React.useState(false);
+    const cart = useStore((state) => state);
+    const drink = {
+        name: props.drink.strDrink,
+        price: parseFloat(randomPrice),
+        quantity: 1,
+        image: props.drink.strDrinkThumb
+    }
 
     return (
         <>
-        <Card style={{ width: '18rem' }}>
-          <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />{props.drink.strDrinkThumb}
+        <Card className='m-2' style={{ width: '18rem' }}>
+          <Card.Img variant="top" src={props.drink.strDrinkThumb} />
           <Card.Body>
             <Card.Title>{props.drink.strDrink}</Card.Title>
-            <Card.Text>
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </Card.Text>
           </Card.Body>
           <ListGroup className="list-group-flush">
             <ListGroup.Item>Codice drink: {props.drink.idDrink}</ListGroup.Item>
-            <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-            <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+            <ListGroup.Item>Prezzo: {randomPrice}€</ListGroup.Item>
           </ListGroup>
-          <Card.Body>
-            <Card.Link href="#">Card Link</Card.Link>
-            <Card.Link href="#">Another Link</Card.Link>
+          <Card.Body className='d-flex flex-wrap justify-content-between'>
+            <Button variant="outline-info"  onClick={() => setModalShow(true)}>Dettagli</Button>
+            <Button variant="outline-primary" onClick={() => cart.add(drink)}>Ordina al tavolo</Button>{' '}
           </Card.Body>
         </Card>
+        {props.drink.strDrink && <Modale name={props.drink.strDrink} show={modalShow} onHide={() => setModalShow(false)}/>}
         </>
       );
 }
